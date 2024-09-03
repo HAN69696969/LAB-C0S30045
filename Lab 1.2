@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="description" content="Data Visualisation Exercise 1" />
+	<meta name="keywords" content="HTML, CSS" />
+	<meta name="author" content="Your name here" />
+
+	<title>Task 1.1 HTML and CSS Demo Page</title>
+	<style>
+		/* Basic styling */
+		body {
+			font-family: Arial, sans-serif;
+			text-align: left;
+			padding: 20px;
+		}
+
+		img {
+			width: 60%;
+			height: auto;
+			margin-top: 20px;
+		}
+
+		.caption {
+			margin-top: 10px;
+			font-style: italic;
+			color: #333;
+		}
+
+		.button-container {
+			margin-top: 20px;
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 16px;
+			margin: 5px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>Title of Article about Interesting Visualisation</h1>
+	<h2>Author of Interesting Article</h2>
+
+	<!-- Image and caption container -->
+	<div>
+		<img id="visualization" src="pets2019.png" alt="Visualization 1" />
+		<div id="caption" class="caption">Figure 1.1 shows the bar chart for pets ownership in 2019</div>
+	</div>
+
+	<!-- Buttons to switch between images -->
+	<div class="button-container">
+		<button onclick="showImage(1)">2019</button>
+		<button onclick="showImage(2)">2021</button>
+		<button onclick="showImage(3)">Both</button>
+	</div>
+
+	<footer>COS30045 Data Visualisation</footer>
+
+	<script>
+		function showImage(index) {
+			const image = document.getElementById('visualization');
+			const caption = document.getElementById('caption');
+
+			if (index === 1) {
+				image.src = "pets2019.png";
+				image.alt = '2019';
+                caption.textContent = 'Figure 1.1 shows the bar chart for pets ownership in 2019';
+			} else if (index === 2) {
+				image.src = 'pets2021.png';
+				image.alt = 'Visualization 2';
+                caption.textContent = 'Figure 1.2 shows the bar chart for pets ownership in 2021';
+			} else if (index === 3) {
+				image.src = 'pets2019 and 2021.png';
+				image.alt = 'Visualization 3';
+                caption.textContent = 'Figure 1.3 shows the bar chart for pets ownership for both years 2019 and 2021';
+			}
+		}
+	</script>
+
+</body>
+
+</html>

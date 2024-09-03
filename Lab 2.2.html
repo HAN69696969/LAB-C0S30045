@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Data Visualisation" />
+    <meta name="keywords" content="HTML, CSS, D3" />
+    <meta name="shrihan" content="HAN" />
+    <title>Task 2.2 D3 Drawing with Data - Bar Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h1>The D3 Journey starts here......</h1>
+    <script>
+        var w = 500;
+        var h = 100;
+        var padding = 1;
+
+        var dataset = [14, 5, 4, 7, 8, 10, 20, 25, 15, 30]; // Added more data points
+
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        svg.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", function (d, i) {
+                return i * (w / dataset.length) + i * padding;
+            })
+            .attr("y", function (d) {
+                return h - d;
+            })
+            .attr("width", w / dataset.length - padding)
+            .attr("height", function (d) {
+                return d; // Use the data value directly to set the height
+            });
+    </script>
+    <br>
+    <br>
+    <footer style="color:grey">COS30045 Data Visualisation<br>Joe Bloggs</footer>
+</body>
+</html>

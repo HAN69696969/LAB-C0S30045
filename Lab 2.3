@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Data Visualisation" />
+    <meta name="keywords" content="HTML, CSS, D3" />
+    <meta name="shrihan" content="HAN" />
+    <title>Scatter Plot Example</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h1>The D3 Journey starts here......</h1>
+    <script>
+        // Define the dataset
+        var dataset = [
+            [5, 20],
+            [6, 10],
+            [7, 24],
+            [5, 88],
+            [14, 90],
+            [410, 69],
+            [200, 77]
+        ];
+
+        // Set the dimensions of the SVG container
+        var w = 500;
+        var h = 200;
+
+        // Create the SVG container
+        var svg = d3.select("body")
+            .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+        // Create the scatter plot
+        svg.selectAll("circle")
+            .data(dataset)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d) { return d[0]; }) // Use the first element of the sub-array as the x coordinate
+            .attr("cy", function(d) { return h - d[1]; }) // Use the second element of the sub-array as the y coordinate and adjust for SVG coordinates
+            .attr("r", 5) // Set the radius of the circles
+            .attr("fill", "blue"); // Set the fill color of the circles
+
+        // Add labels to the data points
+        svg.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+            .text(function(d) { return "(" + d[0] + "," + d[1] + ")"; }) // Label text
+            .attr("x", function(d) { return d[0] + 2; }) // Position the label slightly to the right of the circle
+            .attr("y", function(d) { return h - d[1] - 3; }) // Position the label slightly below the circle
+            .attr("font-size", "10px")
+            .attr("fill", "black"); // Label color
+    </script>
+    <br>
+    <br>
+    <footer style="color:grey">COS30045 Data Visualisation<br>Joe Bloggs</footer>
+</body>
+</html>
