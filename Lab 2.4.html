@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Chart with D3.js</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fccc9d;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg {
+            background-color: #fff;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .bar {
+            fill: #007bff;
+            transition: fill 0.3s;
+        }
+
+        .bar:hover {
+            fill: #0056b3;
+        }
+
+        .label {
+            fill: #333;
+            font-size: 12px;
+            font-weight: bold;
+            text-anchor: middle;
+        }
+
+        .home-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .home-button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 30px;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1>Drawing with Data</h1>
+    <div class="chart-container">
+        <svg width="400" height="300"></svg> 
+        <a href="index.html" class="home-button">Home</a> 
+    </div>
+    <div class="footer">COS30045 Data Visualisation<br>Joe Bloggs</div>
+
+    <script>
+       
+        var data = [
+            { name: "A", value: 30 },
+            { name: "B", value: 55 },
+            { name: "C", value: 40 },
+            { name: "D", value: 65 },
+            { name: "E", value: 50 }
+        ];
+
+        
+        var margin = { top: 20, right: 30, bottom: 30, left: 40 };
+
+        
+        var xScale = d3.scaleBand()
+            .range([0, 300]) 
+            .padding(0.1);
+
+        var yScale = d3.scaleLinear()
+            .range([250, 0]); 
+
+       
+        var svg = d3.select("svg")
+            .attr("width", 400) 
+            .attr("height", 300) 
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        
+        xScale.domain(data.map(function(d) { return d.name; }));
+
+       
+        yScale.domain([0, d3.max(data, function(d) { return d.value; }) + 10]); 
+
+       
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return xScale(d.name); })
+            .attr("width", xScale.bandwidth())
+            .attr("y", function(d) { return yScale(d.value); })
+            .attr("height", function(d) { return 250 - yScale(d.value); }) 
+            .attr("fill", "steelblue");
+
+        
+        svg.selectAll(".label")
+            .data(data)
+            .enter().append("text")
+            .attr("class", "label")
+            .attr("x", function(d) { return xScale(d.name) + xScale.bandwidth() / 2; })
+            .attr("y", function(d) { return yScale(d.value) - 5; }) 
+            .text(function(d) { return d.value; })
+            .attr("text-anchor", "middle");
+    </script>
+</body>
+</html>

@@ -1,27 +1,60 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Data Visualisation Exercise 1" />
     <meta name="keywords" content="HTML, CSS" />
-    <meta name="author" content="Sanjay">
-
-    <title> Lab 2.3 D3 Drawing with Data Scatter Plot</title>
-
+    <meta name="HAN" content="Shrihan">
+    <title>Lab 2.3 D3 Drawing with Data Scatter Plot</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-
     <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fccc9d; 
+            color: #333; 
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between; 
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.5em; 
+            margin-bottom: 40px; 
+            color: #333;
+        }
+
+        footer {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 40px; 
+        }
+
+        .home-button {
+            padding: 15px 30px; 
+            font-size: 18px; 
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px; 
+            transition: background-color 0.3s; 
+            margin-top: 20px; 
+        }
+
+            .home-button:hover {
+                background-color: #0056b3; 
+            }
+
+     
     </style>
-
 </head>
-
 <body>
-
-    <h1>Drawing with Data Scatter-Plot </h1>
-
+    <h1>Drawing with Data Scatter-Plot</h1>
     <script>
-
         var w = 500;
         var h = 100;
         var barPadding = 1;
@@ -66,7 +99,6 @@
             .text(function (d) {
                 return d[0] + "," + d[1];
             })
-
             .attr("x", function (d) {
                 return d[0] + 5;
             })
@@ -75,16 +107,11 @@
             })
             .attr("font-size", "10px")
             .attr("fill", "black");
-
     </script>
-    <p></p>
-    <br>
-    <bf></bf>
-
-    <br>
-    <bf>
-        <footer style="color:grey">COS30045 Data Visualisation<br>Jay Blogs</footer>
-
-
+   
+    <div class="button-container">
+        <a href="index.html" class="home-button">Home</a>
+    </div>
+    <footer style="color:grey">COS30045 Data Visualisation<br>Joe Bloggs</footer>
 </body>
 </html>

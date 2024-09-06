@@ -1,30 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8" />
-	<meta name="description" content="Data Visualisation Exercise 1" />
-	<meta name="keywords" content="HTML, CSS" />
-	<meta name="author" content="Your name here" />
+    <meta charset="UTF-8">
+    <meta name="description" content="Data Visualisation Exercise 1">
+    <meta name="keywords" content="HTML, CSS">
+    <meta name="HAN" content="Shrihan">
+    <title>Task 1.1 HTML and CSS Demo Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fccc9d;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative; 
+        }
 
-	<title>Task 1.1 HTML and CSS Demo Page</title>
-	
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
 
-	<style>
-	</style>
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #555;
+        }
 
+        img {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1em;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+        }
+
+        .home-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff; 
+            color: white;
+            border: none;
+            border-radius: 5px; 
+            transition: background-color 0.3s; 
+            margin-bottom: 60px; 
+        }
+
+        .home-button:hover {
+            background-color: #0056b3; 
+        }
+    </style>
 </head>
-
 <body>
-
-	<h1>Title of Article about Interesting Visualisation</h1>
-	<h2>Author of Interesting Article : HAN</h2>
-
-	
-	<img src="pet_ownership_in_australia_table.png" alt="PETS IN AUSTRALIA" width="500" />
-	<p>Fig 1.Comparison of Pet Ownership in 2019  and 2021. Data Source: <a href="https://animalmedicinesaustralia.org.au/report/">Animal Medicines Australia Report </a> </p>
-	<footer>COS30045 Data Visualisation</footer>
-
+    <h1>LAB 1.1 HTML and CSS </h1>
+    <h2>Author of LAB COS30045: HAN</h2>
+    <img src="pet_ownership_in_australia_table.png" alt="PETS IN AUSTRALIA" width="500" />
+    <p>Fig 1. Comparison of Pet Ownership in 2019 and 2021. Data Source: <a href="https://animalmedicinesaustralia.org.au/report/">Animal Medicines Australia Report</a></p>
+    <a href="index.html" class="home-button">Home</a>
+    <footer>COS30045 Data Visualisation</footer>
 </body>
 </html>
-
