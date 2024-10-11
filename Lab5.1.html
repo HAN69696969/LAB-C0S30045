@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 5.1 D3 Bar Chart with Random Data Update</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #fccc9d; 
+            margin: 0;
+            padding: 0;
+        }
+        svg {
+            font-size: 12px;
+        }
+        .axis path, .axis line, .axis text {
+            display: none; 
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+            padding: 20px;
+        }
+        .button-container {
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="padding: 20px; text-align: center;">Update Data</h2>
+
+<div class="container">
+    <div class="button-container">
+        <button id="updateButton">Update Once</button>
+        <button onclick="window.location.href='index.html'">Home</button> 
+    </div>
+    <svg width="500" height="250"></svg>
+</div>
+
+
+<footer>
+    COS30045 Data Visualisation<br>Joe Bloggs
+</footer>
+
+<script>
+    const svgWidth = 500;
+    const svgHeight = 250;
+    const margin = {top: 20, right: 30, bottom: 30, left: 40};
+    const width = svgWidth - margin.left - margin.right;
+    const height = svgHeight - margin.top - margin.bottom;
+    const maxValue = 25;
+
+    let dataset = [24, 10, 29, 19, 8, 15, 20, 12, 9, 6, 21, 28];
+
+    const svg = d3.select("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+  
+    const xScale = d3.scaleBand()
+        .domain(d3.range(dataset.length))
+        .range([0, width])
+        .paddingInner(0.05); 
+   
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(dataset)])
+        .range([height, 0]);
+
+   
+    svg.selectAll("rect")
+        .data(dataset)
+        .enter()
+        .append("rect")
+        .attr("x", (d, i) => xScale(i))
+        .attr("y", d => yScale(d))
+        .attr("width", xScale.bandwidth()) 
+        .attr("height", d => height - yScale(d))
+        .attr("fill", "slategrey");
+
+  
+    function updateChart() {
+        const numValues = dataset.length;
+        dataset = [];
+        for (let i = 0; i < numValues; i++) {
+            const newNumber = Math.floor(Math.random() * maxValue); 
+            dataset.push(newNumber);
+        }
+
+        
+        yScale.domain([0, d3.max(dataset)]);
+
+        svg.selectAll("rect")
+            .data(dataset)
+            .transition()
+            .duration(500)
+            .attr("y", d => yScale(d))
+            .attr("height", d => height - yScale(d));
+    }
+
+    
+    d3.select("#updateButton").on("click", function() {
+        updateChart();
+        alert("Hey, the button works!");
+    });
+</script>
+
+</body>
+</html>

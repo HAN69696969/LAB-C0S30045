@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6.2 D3 Bar Chart with Mouse Over and Sort</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #fccc9d;
+            margin: 0;
+            padding: 0;
+        }
+        svg {
+            font-size: 12px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .button-container {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            font-size: 16px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+        #addButton {
+            background-color: green;
+        }
+        #removeButton {
+            background-color: red;
+        }
+        #sortButton {
+            background-color: #f111f9;
+        }
+        #homeButton {
+            background-color: blue;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+        .tooltip {
+            font-size: 14px;
+            fill: black;
+            text-anchor: middle;
+        }
+    </style>
+</head>
+<body>
+
+<h2 style="padding: 20px; text-align: center;">Bar Chart with Mouse Over, Sort, and Home</h2>
+
+<div class="container">
+    <div class="button-container">
+        <button id="addButton">Add</button>
+        <button id="removeButton">Remove</button>
+        <button id="sortButton">Sort</button>
+        <button id="homeButton" onclick="window.location.href='index.html'">Home</button>
+    </div>
+    <svg width="500" height="250"></svg>
+</div>
+
+<footer>
+    COS30045 Data Visualisation<br>Joe Bloggs
+</footer>
+
+<script>
+    const svgWidth = 500;
+    const svgHeight = 250;
+    const margin = {top: 20, right: 30, bottom: 30, left: 40};
+    const width = svgWidth - margin.left - margin.right;
+    const height = svgHeight - margin.top - margin.bottom;
+    const maxValue = 25;
+
+    let dataset = [24, 10, 29, 19, 8, 15, 20, 12, 9, 6, 21, 28];
+    let sortAscending = true;  
+
+    const svg = d3.select("svg")
+        .attr("width", svgWidth)
+        .attr("height", svgHeight)
+        .append("g")
+        .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+    const xScale = d3.scaleBand()
+        .domain(d3.range(dataset.length))
+        .range([0, width])
+        .paddingInner(0.05);
+
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(dataset)])
+        .range([height, 0]);
+
+    function renderBars() {
+        const bars = svg.selectAll("rect")
+            .data(dataset, (d) => d);  
+
+        bars.enter()
+            .append("rect")
+            .attr("x", (d, i) => xScale(i))
+            .attr("y", d => yScale(d))
+            .attr("width", xScale.bandwidth())
+            .attr("height", d => height - yScale(d))
+            .attr("fill", "slategrey")
+            .on("mouseover", function(event, d) {
+                d3.select(this)
+                    .attr("fill", "orange");
+
+                const xPosition = parseFloat(d3.select(this).attr("x")) + xScale.bandwidth() / 2;
+                const yPosition = parseFloat(d3.select(this).attr("y")) - 5;
+
+                svg.append("text")
+                    .attr("id", "tooltip")
+                    .attr("x", xPosition)
+                    .attr("y", yPosition)
+                    .attr("class", "tooltip")
+                    .text(d);
+            })
+            .on("mouseout", function() {
+                d3.select(this)
+                    .attr("fill", "slategrey");
+
+                d3.select("#tooltip").remove();
+            })
+            .merge(bars)
+            .transition()
+            .duration(500)
+            .attr("x", (d, i) => xScale(i))
+            .attr("y", d => yScale(d))
+            .attr("height", d => height - yScale(d));
+
+        bars.exit().remove();
+    }
+
+    renderBars();
+
+    function addValue() {
+        const newNumber = Math.floor(Math.random() * maxValue);
+        dataset.push(newNumber);
+        xScale.domain(d3.range(dataset.length));  
+        renderBars();
+    }
+
+    function removeValue() {
+        dataset.shift();
+        xScale.domain(d3.range(dataset.length));  
+        renderBars();
+    }
+
+    function sortBars() {
+       
+        dataset.sort((a, b) => sortAscending ? d3.ascending(a, b) : d3.descending(a, b));
+
+       
+        xScale.domain(d3.range(dataset.length));
+
+        svg.selectAll("rect")
+            .data(dataset, (d) => d)
+            .transition()
+            .duration(1000)
+            .attr("x", (d, i) => xScale(i));
+
+     
+        sortAscending = !sortAscending;
+    }
+
+    d3.select("#addButton").on("click", addValue);
+    d3.select("#removeButton").on("click", removeValue);
+    d3.select("#sortButton").on("click", sortBars);
+
+</script>
+
+</body>
+</html>
