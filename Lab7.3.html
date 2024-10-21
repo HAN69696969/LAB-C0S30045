@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stacked Bar Chart Example</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fccc9d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+        }
+        svg {
+            margin-top: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Stacked Bar Chart Example</h2>
+    <svg width="500" height="300"></svg>
+
+    <script>
+        // Set up the data
+        var data = [
+            { year: "2010", group1: 10, group2: 30, group3: 20 },
+            { year: "2011", group1: 20, group2: 40, group3: 25 },
+            { year: "2012", group1: 30, group2: 45, group3: 30 },
+            { year: "2013", group1: 40, group2: 35, group3: 28 },
+            { year: "2014", group1: 50, group2: 40, group3: 32 }
+        ];
+
+        // Set up dimensions and margins
+        var margin = { top: 20, right: 30, bottom: 40, left: 50 },
+            width = 500 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom;
+
+        // Append the SVG element
+        var svg = d3.select("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // List of subgroups (stacked elements)
+        var subgroups = ["group1", "group2", "group3"];
+
+        // List of groups (X-axis categories)
+        var groups = data.map(d => d.year);
+
+        // Create a color scale
+        var color = d3.scaleOrdinal()
+                      .domain(subgroups)
+                      .range(["#66c2a5", "#fc8d62", "#8da0cb"]);
+
+        // Create an X scale
+        var x = d3.scaleBand()
+                  .domain(groups)
+                  .range([0, width])
+                  .padding([0.2]);
+
+        svg.append("g")
+           .attr("transform", "translate(0," + height + ")")
+           .call(d3.axisBottom(x).tickSize(0));
+
+        // Create a Y scale
+        var y = d3.scaleLinear()
+                  .domain([0, 120])
+                  .range([height, 0]);
+
+        svg.append("g")
+           .call(d3.axisLeft(y));
+
+        // Stack the data for each subgroup
+        var stackedData = d3.stack()
+                            .keys(subgroups)
+                            (data);
+
+        // Create the bars
+        svg.append("g")
+           .selectAll("g")
+           .data(stackedData)
+           .enter().append("g")
+           .attr("fill", function(d) { return color(d.key); })
+           .selectAll("rect")
+           .data(function(d) { return d; })
+           .enter().append("rect")
+           .attr("x", function(d) { return x(d.data.year); })
+           .attr("y", function(d) { return y(d[1]); })
+           .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+           .attr("width", x.bandwidth());
+    </script>
+
+</body>
+</html>
