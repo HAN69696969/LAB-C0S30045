@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number of Unemployed in Australia</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2;
+        }
+        .halfMilMark {
+            stroke: red;
+            stroke-dasharray: 3,3;
+        }
+        .halfMilLabel {
+            font-size: 12px;
+            fill: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Number of Unemployed in Australia</h2>
+    <div id="chart"></div>
+
+    <script>
+        var margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = 600 - margin.left - margin.right,
+            height = 300 - margin.top - margin.bottom;
+
+        // Create SVG canvas
+        var svg = d3.select("#chart").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Parse the date / time
+        var parseTime = d3.timeParse("%Y-%m");
+
+        // Set the ranges
+        var x = d3.scaleTime().range([0, width]);
+        var y = d3.scaleLinear().range([height, 0]);
+
+        // Define the line
+        var valueline = d3.line()
+            .x(function(d) { return x(d.date); })
+            .y(function(d) { return y(d.number); });
+
+        // Load the data
+        d3.csv("Unemployment_78-95.csv").then(function(data) {
+
+            // Format the data
+            data.forEach(function(d) {
+                d.date = parseTime(d.year + "-" + d.month);
+                d.number = +d.number;
+            });
+
+            // Scale the range of the data
+            x.domain(d3.extent(data, function(d) { return d.date; }));
+            y.domain([0, d3.max(data, function(d) { return d.number; })]);
+
+            // Add the valueline path.
+            svg.append("path")
+              .data([data])
+              .attr("class", "line")
+              .attr("d", valueline);
+
+            // Add the X Axis
+            svg.append("g")
+              .attr("transform", "translate(0," + height + ")")
+              .call(d3.axisBottom(x));
+
+            // Add the Y Axis
+            svg.append("g")
+              .call(d3.axisLeft(y));
+
+            // Add half million line
+            svg.append("line")
+              .attr("class", "halfMilMark")
+              .attr("x1", 0)
+              .attr("y1", y(500000))
+              .attr("x2", width)
+              .attr("y2", y(500000));
+
+            // Add text label for the half million line
+            svg.append("text")
+              .attr("class", "halfMilLabel")
+              .attr("x", width - 150)
+              .attr("y", y(500000) - 10)
+              .text("Half a million unemployed");
+
+        }).catch(function(error) {
+            console.log(error);
+        });
+    </script>
+</body>
+</html>
