@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victorian LGA Map Example</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fccc9d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        svg {
+            margin-top: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Victorian LGA Map</h2>
+    <svg width="600" height="600"></svg>
+
+    <script>
+        // Set up width and height
+        var width = 600;
+        var height = 600;
+
+        // Create an SVG element
+        var svg = d3.select("svg")
+                    .attr("width", width)
+                    .attr("height", height);
+
+        // Set up a projection and path generator
+        var projection = d3.geoMercator()
+                           .center([145.0, -37.0]) // Center on Victoria
+                           .scale(3000)            // Zoom level
+                           .translate([width / 2, height / 2]); // Center the map in SVG
+
+        var path = d3.geoPath().projection(projection);
+
+        // Load GeoJSON data
+        d3.json("https://raw.githubusercontent.com/tonywr71/vic_lga_geojson/master/vic-lga.geojson").then(function(data) {
+            
+            // Bind data and create one path per GeoJSON feature
+            svg.selectAll("path")
+                .data(data.features)
+                .enter()
+                .append("path")
+                .attr("d", path)
+                .attr("fill", "#ccc")
+                .attr("stroke", "#333")
+                .attr("stroke-width", 0.5);
+        });
+    </script>
+
+</body>
+</html>
