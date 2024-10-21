@@ -9,6 +9,19 @@
         body {
             background-color: #fccc9d;
             font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            
         }
         .line {
             fill: none;
@@ -23,13 +36,15 @@
             font-size: 12px;
             fill: red;
         }
-        
+   
     </style>
 </head>
 <body>
 
-    <h2>Number of Unemployed in Australia</h2>
-    <div id="chart"></div>
+    <div class="chart-container">
+        <h2>Number of Unemployed in Australia</h2>
+        <div id="chart"></div>
+    </div>
 
     <script>
         var margin = {top: 20, right: 20, bottom: 30, left: 50},
