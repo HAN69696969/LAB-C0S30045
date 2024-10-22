@@ -36,7 +36,7 @@
 
         d3.queue()
           .defer(d3.json, "LGA_VIC.json") // Load GeoJSON map
-          .defer(d3.csv, "unemployment_data.csv", function(d) {
+          .defer(d3.csv, "VIC_LGA_unemployment.csv", function(d) {
             unemploymentData.set(d.LGA_CODE, +d.unemployed);
           })
           .await(drawMap);
