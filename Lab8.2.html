@@ -34,22 +34,38 @@
                       .domain([0, 1000]) // Adjust domain based on data
                       .range(d3.schemePurples[9]);
 
-        d3.queue()
-          .defer(d3.json, "LGA_VIC.json") // Load GeoJSON map
-          .defer(d3.csv, "VIC_LGA_unemployment.csv", function(d) {
-            unemploymentData.set(d.LGA_CODE, +d.unemployed);
-          })
-          .await(drawMap);
+        // Load the GeoJSON file first
+        d3.json("LGA_VIC.json").then(function(geoData) {
+            console.log("GeoJSON data loaded:", geoData);
+            
+            if (!geoData || !geoData.features) {
+                console.error("GeoJSON does not contain features");
+                return;
+            }
+
+            // Now load the CSV file
+            d3.csv("VIC_LGA_unemployment.csv").then(function(csvData) {
+                console.log("CSV data loaded:", csvData);
+
+                // Create the unemployment data map
+                csvData.forEach(function(d) {
+                    unemploymentData.set(d.LGA_CODE, +d.unemployed);
+                });
+
+                // Call the function to draw the map once both files are loaded
+                drawMap(null, geoData);
+
+            }).catch(function(error) {
+                console.error("Error loading CSV file:", error);
+            });
+
+        }).catch(function(error) {
+            console.error("Error loading GeoJSON file:", error);
+        });
 
         function drawMap(error, geoData) {
-          if (error) throw error;
-
-          // Debugging: Check if geoData is loaded correctly
-          console.log("Loaded GeoJSON data:", geoData);
-
-          // Ensure geoData is valid and has a features array
-          if (!geoData || !geoData.features) {
-              console.error("GeoJSON does not contain features");
+          if (error) {
+              console.error("Error drawing map:", error);
               return;
           }
 
@@ -61,7 +77,7 @@
           var path = d3.geoPath().projection(projection);
 
           svg.selectAll("path")
-             .data(geoData.features)  // Ensure this is a valid array of features
+             .data(geoData.features)
              .enter().append("path")
              .attr("d", path)
              .attr("fill", function(d) {
