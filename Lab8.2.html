@@ -35,7 +35,7 @@
                       .range(d3.schemePurples[9]);
 
         d3.queue()
-          .defer(d3.json, "victoria_lga.geojson") // Load GeoJSON map
+          .defer(d3.json, "LGA_VIC.json") // Load GeoJSON map
           .defer(d3.csv, "unemployment_data.csv", function(d) {
             unemploymentData.set(d.LGA_CODE, +d.unemployed);
           })
