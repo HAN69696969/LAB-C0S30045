@@ -22,12 +22,20 @@
         h2 {
             color: #333;
         }
+        .legend {
+            font-size: 12px;
+            text-align: center;
+        }
+        .legend rect {
+            stroke-width: 2;
+        }
     </style>
 </head>
 <body>
 
     <h2>Stacked Bar Chart Example</h2>
     <svg width="500" height="300"></svg>
+    <div class="legend"></div> <!-- Legend container -->
 
     <script>
         // Set up the data
@@ -98,6 +106,27 @@
            .attr("y", function(d) { return y(d[1]); })
            .attr("height", function(d) { return y(d[0]) - y(d[1]); })
            .attr("width", x.bandwidth());
+
+        // Add a legend
+        var legend = d3.select(".legend")
+            .selectAll("legend")
+            .data(subgroups)
+            .enter().append("div")
+            .attr("class", "legend-item")
+            .style("display", "inline-block")
+            .style("margin-right", "10px");
+
+        // Add colored rectangles for each legend item
+        legend.append("div")
+            .style("width", "12px")
+            .style("height", "12px")
+            .style("background-color", function(d) { return color(d); })
+            .style("display", "inline-block")
+            .style("margin-right", "5px");
+
+        // Add text labels for each legend item
+        legend.append("span")
+            .text(function(d) { return d; });
     </script>
 
 </body>
