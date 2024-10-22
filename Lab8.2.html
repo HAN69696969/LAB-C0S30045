@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Victorian Number Unemployed by LGA</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            background: white;
+            border: 1px solid black;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Victorian Number Unemployed by LGA</h2>
+    <svg width="600" height="600"></svg>
+
+    <script>
+        var width = 600, height = 600;
+
+        var unemploymentData = d3.map();
+
+        var svg = d3.select("svg");
+
+        var color = d3.scaleQuantize()
+                      .domain([0, 1000]) // Adjust domain based on data
+                      .range(d3.schemePurples[9]);
+
+        d3.queue()
+          .defer(d3.json, "victoria_lga.geojson") // Load GeoJSON map
+          .defer(d3.csv, "unemployment_data.csv", function(d) {
+            unemploymentData.set(d.LGA_CODE, +d.unemployed);
+          })
+          .await(drawMap);
+
+        function drawMap(error, geoData) {
+          if (error) throw error;
+
+          var projection = d3.geoMercator()
+                             .center([145.0, -37.0])
+                             .scale(3000)
+                             .translate([width / 2, height / 2]);
+
+          var path = d3.geoPath().projection(projection);
+
+          svg.selectAll("path")
+             .data(geoData.features)
+             .enter().append("path")
+             .attr("d", path)
+             .attr("fill", function(d) {
+               var unemployed = unemploymentData.get(d.properties.LGA_CODE) || 0;
+               return color(unemployed);
+             })
+             .attr("stroke", "#fff")
+             .attr("stroke-width", 0.5);
+
+          var tooltip = d3.select("body").append("div")
+                          .attr("class", "tooltip");
+
+          svg.selectAll("path")
+             .on("mouseover", function(event, d) {
+                var unemployed = unemploymentData.get(d.properties.LGA_CODE) || 0;
+                tooltip.transition().duration(200).style("opacity", 0.9);
+                tooltip.html(d.properties.LGA_NAME + "<br/>Unemployed: " + unemployed)
+                       .style("left", (event.pageX + 5) + "px")
+                       .style("top", (event.pageY - 28) + "px");
+             })
+             .on("mouseout", function() {
+                tooltip.transition().duration(500).style("opacity", 0);
+             });
+        }
+    </script>
+</body>
+</html>
